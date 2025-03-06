@@ -1,0 +1,92 @@
+-- Create 'trainers' table
+CREATE TABLE trainers (
+    id SERIAL PRIMARY KEY,
+    id_number VARCHAR(20) UNIQUE NOT NULL, -- תעודת זהות
+    first_name VARCHAR(100) NOT NULL,
+    last_name VARCHAR(100) NOT NULL,
+    birth_date DATE NOT NULL,
+    join_date DATE DEFAULT CURRENT_DATE
+);
+
+-- Index for searching trainers by ID number
+CREATE INDEX idx_trainers_id_number ON trainers (id_number);
+
+-- Create 'trainees' table
+CREATE TABLE trainees (
+    id SERIAL PRIMARY KEY,
+    id_number VARCHAR(20) UNIQUE NOT NULL, -- תעודת זהות
+    first_name VARCHAR(100) NOT NULL,
+    last_name VARCHAR(100) NOT NULL,
+    birth_date DATE NOT NULL,
+    join_date DATE DEFAULT CURRENT_DATE
+);
+
+-- Create 'trainers_trainees' table
+CREATE TABLE trainers_trainees (
+    id SERIAL PRIMARY KEY,
+    trainer_id INT NOT NULL,
+    trainee_id INT NOT NULL,
+    FOREIGN KEY (trainer_id) REFERENCES trainers(id) ON DELETE CASCADE,
+    FOREIGN KEY (trainee_id) REFERENCES trainees(id) ON DELETE CASCADE,
+    UNIQUE (trainer_id, trainee_id) -- Ensuring a unique trainer-trainee pairing
+);
+
+-- Indexes for faster lookup
+CREATE INDEX idx_trainers_trainees_trainer ON trainers_trainees (trainer_id);
+CREATE INDEX idx_trainers_trainees_trainee ON trainers_trainees (trainee_id);
+
+
+-- Index for searching trainees by ID number
+CREATE INDEX idx_trainees_id_number ON trainees (id_number);
+
+-- Create 'training_types' table
+CREATE TABLE training_types (
+    id SERIAL PRIMARY KEY,
+    type VARCHAR(100) UNIQUE NOT NULL
+);
+
+-- Create 'studios' table
+CREATE TABLE studios (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) UNIQUE NOT NULL
+);
+
+-- Create 'studios_types' table (Mapping studios to training types)
+CREATE TABLE studios_types (
+    id SERIAL PRIMARY KEY,
+    training_type_id INT NOT NULL,
+    studio_id INT NOT NULL,
+    FOREIGN KEY (training_type_id) REFERENCES training_types(id) ON DELETE CASCADE,
+    FOREIGN KEY (studio_id) REFERENCES studios(id) ON DELETE CASCADE,
+    UNIQUE (training_type_id, studio_id)
+);
+
+-- Create 'trainings' table
+CREATE TABLE trainings (
+    id SERIAL PRIMARY KEY,
+    type_id INT NOT NULL,
+    trainer_id INT NOT NULL,
+    date_time TIMESTAMP NOT NULL,
+    duration INTERVAL NOT NULL,
+    studio_id INT NOT NULL,
+    FOREIGN KEY (type_id) REFERENCES training_types(id) ON DELETE CASCADE,
+    FOREIGN KEY (trainer_id) REFERENCES trainers(id) ON DELETE CASCADE,
+    FOREIGN KEY (studio_id) REFERENCES studios(id) ON DELETE CASCADE
+);
+
+-- Index for searching trainings by date
+CREATE INDEX idx_trainings_date_time ON trainings (date_time);
+
+-- Create 'trainings_trainees' table (Many-to-many relationship between trainings and trainees)
+CREATE TABLE trainings_trainees (
+    id SERIAL PRIMARY KEY,
+    training_id INT NOT NULL,
+    trainee_id INT NOT NULL,
+    FOREIGN KEY (training_id) REFERENCES trainings(id) ON DELETE CASCADE,
+    FOREIGN KEY (trainee_id) REFERENCES trainees(id) ON DELETE CASCADE,
+    UNIQUE (training_id, trainee_id)
+);
+
+-- Indexes for many-to-many relationship lookups
+CREATE INDEX idx_trainings_trainees_training ON trainings_trainees (training_id);
+CREATE INDEX idx_trainings_trainees_trainee ON trainings_trainees (trainee_id);
