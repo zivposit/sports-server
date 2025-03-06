@@ -1,0 +1,63 @@
+-- Insert into 'trainers' table (4 trainers)
+INSERT INTO trainers (id_number, first_name, last_name, birth_date, join_date)
+VALUES 
+    ('123456789', 'John', 'Doe', '1985-04-12', CURRENT_DATE),
+    ('987654321', 'Alice', 'Smith', '1990-08-25', CURRENT_DATE),
+    ('654321987', 'Michael', 'Brown', '1982-12-05', CURRENT_DATE),
+    ('789123456', 'Sarah', 'Johnson', '1995-07-19', CURRENT_DATE);
+
+-- Insert into 'trainees' table (at least 10 trainees)
+INSERT INTO trainees (id_number, first_name, last_name, birth_date, join_date)
+VALUES 
+    ('111222333', 'James', 'Miller', '2000-03-15', CURRENT_DATE),
+    ('444555666', 'Emily', 'Davis', '1998-06-21', CURRENT_DATE),
+    ('777888999', 'Daniel', 'Martinez', '2001-11-30', CURRENT_DATE),
+    ('555444333', 'Sophia', 'Garcia', '1999-09-25', CURRENT_DATE),
+    ('666777888', 'Ethan', 'Rodriguez', '1997-02-10', CURRENT_DATE),
+    ('222333444', 'Olivia', 'Wilson', '2003-05-14', CURRENT_DATE),
+    ('999000111', 'Lucas', 'Anderson', '2002-01-22', CURRENT_DATE),
+    ('123987456', 'Isabella', 'Thomas', '2001-07-07', CURRENT_DATE),
+    ('321654987', 'Benjamin', 'Taylor', '1996-12-17', CURRENT_DATE),
+    ('741852963', 'Charlotte', 'Moore', '2004-04-03', CURRENT_DATE);
+
+-- Insert into 'training_types' table (at least 5 types)
+INSERT INTO training_types (type)
+VALUES 
+    ('Yoga'),
+    ('Strength Training'),
+    ('Cardio'),
+    ('Pilates'),
+    ('CrossFit');
+
+-- Insert into 'studios' table (exactly 4 studios)
+INSERT INTO studios (name)
+VALUES 
+    ('Zen Studio'),
+    ('Power Room'),
+    ('Endurance Zone'),
+    ('CrossFit Box');
+
+-- Insert into 'studios_types' table (random amount of types for each studio)
+INSERT INTO studios_types (training_type_id, studio_id)
+VALUES 
+    ((SELECT id FROM training_types WHERE type = 'Yoga'), (SELECT id FROM studios WHERE name = 'Zen Studio')),
+    ((SELECT id FROM training_types WHERE type = 'Pilates'), (SELECT id FROM studios WHERE name = 'Zen Studio')),
+    ((SELECT id FROM training_types WHERE type = 'Strength Training'), (SELECT id FROM studios WHERE name = 'Power Room')),
+    ((SELECT id FROM training_types WHERE type = 'Cardio'), (SELECT id FROM studios WHERE name = 'Endurance Zone')),
+    ((SELECT id FROM training_types WHERE type = 'CrossFit'), (SELECT id FROM studios WHERE name = 'CrossFit Box')),
+    ((SELECT id FROM training_types WHERE type = 'Strength Training'), (SELECT id FROM studios WHERE name = 'CrossFit Box')),
+    ((SELECT id FROM training_types WHERE type = 'Cardio'), (SELECT id FROM studios WHERE name = 'Power Room'));
+
+-- Assign trainees to trainers (each trainer gets multiple trainees, and each trainee may have multiple trainers)
+INSERT INTO trainers_trainees (trainer_id, trainee_id)
+VALUES 
+    ((SELECT id FROM trainers ORDER BY RANDOM() LIMIT 1), (SELECT id FROM trainees ORDER BY RANDOM() LIMIT 1)),
+    ((SELECT id FROM trainers ORDER BY RANDOM() LIMIT 1), (SELECT id FROM trainees ORDER BY RANDOM() LIMIT 1)),
+    ((SELECT id FROM trainers ORDER BY RANDOM() LIMIT 1), (SELECT id FROM trainees ORDER BY RANDOM() LIMIT 1)),
+    ((SELECT id FROM trainers ORDER BY RANDOM() LIMIT 1), (SELECT id FROM trainees ORDER BY RANDOM() LIMIT 1)),
+    ((SELECT id FROM trainers ORDER BY RANDOM() LIMIT 1), (SELECT id FROM trainees ORDER BY RANDOM() LIMIT 1)),
+    ((SELECT id FROM trainers ORDER BY RANDOM() LIMIT 1), (SELECT id FROM trainees ORDER BY RANDOM() LIMIT 1)),
+    ((SELECT id FROM trainers ORDER BY RANDOM() LIMIT 1), (SELECT id FROM trainees ORDER BY RANDOM() LIMIT 1)),
+    ((SELECT id FROM trainers ORDER BY RANDOM() LIMIT 1), (SELECT id FROM trainees ORDER BY RANDOM() LIMIT 1)),
+    ((SELECT id FROM trainers ORDER BY RANDOM() LIMIT 1), (SELECT id FROM trainees ORDER BY RANDOM() LIMIT 1)),
+    ((SELECT id FROM trainers ORDER BY RANDOM() LIMIT 1), (SELECT id FROM trainees ORDER BY RANDOM() LIMIT 1));

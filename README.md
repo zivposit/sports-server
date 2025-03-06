@@ -1,24 +1,37 @@
-# README
-
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+sports-server/                           
+│── app/                                 
+│   ├── controllers/                     
+│   │   ├── application_controller.rb    
+│   │   ├── trainers_controller.rb
+│   │   ├── trainees_controller.rb
+│   │   ├── trainings_controller.rb
+│   │   ├── trainer_trainees_controller.rb
+│   │   ├── training_trainees_controller.rb
+│   │
+│   ├── models/                          
+│   │   ├── application_record.rb
+│   │   ├── trainer.rb
+│   │   ├── trainee.rb
+│   │   ├── training.rb
+│   │   ├── training_type.rb
+│   │   ├── studio.rb
+│   │   ├── trainer_trainee.rb
+│   │   ├── training_trainee.rb
+│   │
+│   ├── services/                       
+│   │   ├── trainer_service.rb
+│   │   ├── trainee_service.rb
+│   │   ├── training_service.rb
+│   │   ├── trainer_trainee_service.rb
+│   │   ├── training_trainee_service.rb
+│   │
+│   │
+│── config/                              
+│   ├── routes.rb                        
+│   ├── database.yml                      
+│
+│── db/                                
+│   ├── migrate/                        
+│   │   ├── ...
+│   │   ├── ...
+│   │   ├── ...

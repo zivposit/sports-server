@@ -1,2 +1,5 @@
 class Guide < ApplicationRecord
+
+
+
 end
