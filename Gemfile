@@ -56,3 +56,7 @@ group :development do
   gem "web-console"
 end
 
+
+gem "rack-cors", "~> 2.0"
+
+gem "jsonapi-serializer", "~> 2.2"
