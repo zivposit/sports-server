@@ -1,5 +1,5 @@
 class TrainingTraineesController < ApplicationController
-  # Assign multiple trainees to a training
+    
   def create
     result = TrainingTraineeService.assign_trainees(params[:training_id], params[:trainee_ids])
 
@@ -10,7 +10,6 @@ class TrainingTraineesController < ApplicationController
     end
   end
 
-  # Remove a trainee from a training
   def destroy
     training_trainee = TrainingTrainee.find_by(id: params[:id])
 
