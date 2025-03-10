@@ -11,8 +11,10 @@ class TrainingsController < ApplicationController
   end
 
   def create
+    puts training_params
     result = TrainingService.create_training(training_params)
-  
+    puts result
+
     if result.is_a?(Training)
       render json: Serializer::TrainingSerializer.new(result).serializable_hash, status: :created
     else
@@ -44,7 +46,7 @@ class TrainingsController < ApplicationController
       :date_time, 
       :duration, 
       :training_type_id,
-      :trainees
+      trainees: []
     )
   end
 end
