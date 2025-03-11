@@ -20,7 +20,7 @@ class TrainersController < ApplicationController
   end
 
   def update
-    result = TrainerService.update_trainer(@trainer, trainer_update_params)
+    result = TrainerService.update_trainer(@trainer, trainer_params)
     
     if result.is_a?(Trainer)
       render json: Serializer::TrainerSerializer.new(result).serializable_hash, status: :ok

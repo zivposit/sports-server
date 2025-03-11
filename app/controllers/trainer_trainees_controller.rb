@@ -1,5 +1,4 @@
 class TrainerTraineesController < ApplicationController
-  # GET /trainers/:trainer_id/trainees
   def index
     result = TrainerTraineeService.get_trainees_for_trainer(params[:trainer_id])
   
@@ -11,7 +10,6 @@ class TrainerTraineesController < ApplicationController
   end
   
 
-  # POST /trainer_trainees
   def create
     result = TrainerTraineeService.create_and_assign_trainee(params[:trainee][:trainer_id], trainee_params)
     if result.is_a?(Trainee)
@@ -22,7 +20,6 @@ class TrainerTraineesController < ApplicationController
   end
 
 
-  # DELETE /trainer_trainees/:id
   def destroy
     result = TrainerTraineeService.remove_trainer_trainee(params[:id])
     render json: result

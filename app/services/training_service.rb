@@ -22,9 +22,15 @@ class TrainingService
   
 
   def self.update_training(training, update_params)
-    return training if training.update(update_params)
-
-    { error: training.errors.full_messages }
+    trainee_ids = update_params.delete(:trainees) || []
+  
+    if training.update(update_params)
+      TrainingTraineeService.assign_trainees(training.id, trainee_ids)
+  
+      return training
+    else
+      return { error: training.errors.full_messages }
+    end
   end
 
   def self.delete_training(training)

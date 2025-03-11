@@ -1,19 +1,14 @@
 class TrainingTraineeService
   def self.assign_trainees(training_id, trainee_ids)
-    return { error: "Training ID and trainee IDs are required" } if training_id.blank? || trainee_ids.blank? || trainee_ids.empty?
+    current_trainee_ids = TrainingTrainee.where(training_id: training_id).pluck(:trainee_id)
 
-    created_records = []
-    trainee_ids.each do |trainee_id|
-      training_trainee = TrainingTrainee.new(training_id:, trainee_id:)
+    trainees_to_remove = current_trainee_ids - trainee_ids
+    TrainingTrainee.where(training_id: training_id, trainee_id: trainees_to_remove).destroy_all if trainees_to_remove.any?
 
-      if training_trainee.save
-        created_records << training_trainee
-      else
-        return { error: training_trainee.errors.full_messages }
-      end
+    trainees_to_add = trainee_ids - current_trainee_ids
+    trainees_to_add.each do |trainee_id|
+      TrainingTrainee.create!(training_id: training_id, trainee_id: trainee_id)
     end
-
-    created_records
   end
 
   def self.remove_trainee_from_training(id)

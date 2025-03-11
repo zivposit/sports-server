@@ -4,10 +4,9 @@ Rails.application.routes.draw do
   
   resources :trainer_trainees, only: [:create, :destroy]
   resources :training_trainees, only: [:create, :destroy]
-  resources :trainer_trainings, only: [:index]
   
   resources :trainers do
-    resources :trainees, only: [:index, :create], controller: 'trainer_trainees' 
+    resources :trainees, only: [:index, :create, :update, :destroy], controller: 'trainer_trainees' 
   end
 
   resources :trainings do
