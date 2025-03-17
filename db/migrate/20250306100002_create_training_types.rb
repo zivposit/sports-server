@@ -1,4 +1,4 @@
-class CreateTrainingTypes < ActiveRecord::Migration[7.0]
+class CreateTrainingTypes < ActiveRecord::Migration
   def change
     create_table :training_types do |t|
       t.string :name, null: false

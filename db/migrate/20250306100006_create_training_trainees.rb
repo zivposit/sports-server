@@ -1,4 +1,4 @@
-class CreateTrainingTrainees < ActiveRecord::Migration[7.0]
+class CreateTrainingTrainees < ActiveRecord::Migration
   def change
     create_table :training_trainees do |t|
       t.references :training, null: false, foreign_key: true

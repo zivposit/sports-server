@@ -1,4 +1,4 @@
-class ChangeDurationToIntegerInTrainings < ActiveRecord::Migration[8.0]
+class ChangeDurationToIntegerInTrainings < ActiveRecord::Migration
   def change
     change_column :trainings, :duration, :integer, using: 'duration::integer'
   end

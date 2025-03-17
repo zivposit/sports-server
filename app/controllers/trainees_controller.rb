@@ -1,8 +1,8 @@
 class TraineesController < ApplicationController
-  before_action -> { set_resource(TraineeService, :id, :trainee) }, only: [:show, :update, :destroy]
+  before_action :set_trainee, only: [:show, :update, :destroy]
 
   def index
-    trainees = TraineeService.get_all_trainees
+    trainees = Trainee.all
     render json: Serializer::TraineeSerializer.new(trainees).serializable_hash
   end
 
@@ -11,39 +11,44 @@ class TraineesController < ApplicationController
   end
 
   def create
-    result = TraineeService.create_trainee(trainee_params)
+    trainee = Trainee.new(trainee_params)
 
-    if result.is_a?(Trainee)
-      render json: Serializer::TraineeSerializer.new(result).serializable_hash, status: :created
+    if trainee.save
+      render json: Serializer::TraineeSerializer.new(trainee).serializable_hash, status: :created
     else
-      render json: { error: result }, status: :unprocessable_entity
+      render json: { errors: trainee.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
   def update
-    result = TraineeService.update_trainee(@trainee, trainee_params)
-
-    if result.is_a?(Trainee)
-      render json: Serializer::TraineeSerializer.new(result).serializable_hash, status: :ok
+    if @trainee.update(trainee_params)
+      render json: Serializer::TraineeSerializer.new(@trainee).serializable_hash, status: :ok
     else
-      render json: { error: result }, status: :unprocessable_entity
+      render json: { errors: @trainee.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
   def destroy
-    result = TraineeService.delete_trainee(@trainee)
-    render json: { message: result }
+    @trainee.destroy
+    render json: { message: "Trainee deleted successfully" }, status: :ok
   end
 
   private
 
+  def set_trainee
+    @trainee = Trainee.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    render json: { error: "Trainee not found" }, status: :not_found
+  end
+
   def trainee_params
-    params.require(:trainee).permit(
-      :id_number, 
-      :first_name, 
-      :last_name, 
-      :birth_date, 
-      :join_date
-    )
+    params.require(:trainee)
+      .permit(
+        :id_number, 
+        :first_name, 
+        :last_name, 
+        :birth_date, 
+        :join_date
+      )
   end
 end

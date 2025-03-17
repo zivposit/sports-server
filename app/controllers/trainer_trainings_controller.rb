@@ -1,7 +1,7 @@
 class TrainerTrainingsController < ApplicationController
   def index
-    trainer_id = params[:trainer_id]
-    trainings = TrainingService.get_trainings_by_trainer(trainer_id)
+    trainings = Training.where(trainer_id: params[:trainer_id])
+                        .includes(:training_type, :studio, :trainees)
 
     render json: Serializer::TrainingSerializer.new(trainings).serializable_hash
   end

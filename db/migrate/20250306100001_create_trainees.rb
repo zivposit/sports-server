@@ -1,4 +1,4 @@
-class CreateTrainees < ActiveRecord::Migration[7.0]
+class CreateTrainees < ActiveRecord::Migration
   def change
     create_table :trainees do |t|
       t.string :id_number, null: false

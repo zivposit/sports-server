@@ -1,4 +1,4 @@
-class SeedCrossFitTrainingTypesAndStudios < ActiveRecord::Migration[8.0]
+class SeedCrossFitTrainingTypesAndStudios < ActiveRecord::Migration
   def up
     studios = [
       { name: "CrossFit Downtown" },

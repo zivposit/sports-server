@@ -1,13 +1,12 @@
 class TrainingTraineesController < ApplicationController
-    
   def create
-    result = TrainingTraineeService.assign_trainees(params[:training_id], params[:trainee_ids])
+    training = Training.find_by(id: params[:training_id])
+    return render json: { error: "Training not found" }, status: :not_found unless training
 
-    if result.is_a?(Array)
-      render json: result, status: :created
-    else
-      render json: result, status: :unprocessable_entity
-    end
+    trainee_ids = params[:trainee_ids] || []
+    training.assign_trainees(trainee_ids)
+
+    render json: { success: "Trainees assigned successfully" }, status: :created
   end
 
   def destroy
@@ -15,9 +14,8 @@ class TrainingTraineesController < ApplicationController
 
     if training_trainee
       training_trainee.destroy
-      head :no_content
     else
-      render json: { error: "TrainingTrainee not found" }, status: :not_found
+      render json: { error: "Training-Trainee association not found" }, status: :not_found
     end
   end
 end

@@ -1,32 +1,41 @@
 class TrainerTraineesController < ApplicationController
+  before_action :set_trainer, only: [:index, :create]
+
   def index
-    result = TrainerTraineeService.get_trainees_for_trainer(params[:trainer_id])
-  
-    if result.is_a?(Hash) && result[:error]
-      render json: result, status: :not_found
-    else
-      render json: Serializer::TraineeSerializer.new(result).serializable_hash
-    end
+    trainees = @trainer.trainees
+    render json: Serializer::TraineeSerializer.new(trainees).serializable_hash
   end
-  
 
   def create
-    result = TrainerTraineeService.create_and_assign_trainee(params[:trainee][:trainer_id], trainee_params)
-    if result.is_a?(Trainee)
-      render json: Serializer::TraineeSerializer.new(result).serializable_hash, status: :created
+    trainer_id = params[:trainee].delete(:trainer_id)
+    trainee = Trainee.new(trainee_params) 
+  
+    if trainee.save
+      TrainerTrainee.create(trainer_id: trainer_id, trainee_id: trainee.id)
+      render json: Serializer::TraineeSerializer.new(trainee).serializable_hash, status: :created
     else
-      render json: result, status: :unprocessable_entity
+      render json: { error: trainee.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
-
   def destroy
-    result = TrainerTraineeService.remove_trainer_trainee(params[:id])
-    render json: result
+    trainer_trainee = TrainerTrainee.find_by(id: params[:id])
+
+    if trainer_trainee
+      trainer_trainee.destroy
+      render json: { message: "Trainee removed from trainer successfully" }, status: :ok
+    else
+      render json: { error: "Trainer-Trainee association not found" }, status: :not_found
+    end
   end
 
-  
   private
+
+  def set_trainer
+    trainer_id = params[:trainer_id] || params.dig(:trainee, :trainer_id)
+    @trainer = Trainer.find_by(id: trainer_id)
+    render json: { error: "Trainer not found" }, status: :not_found unless @trainer
+  end
 
   def trainee_params
     params

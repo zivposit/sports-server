@@ -1,8 +1,8 @@
 class TrainersController < ApplicationController
-  before_action -> { set_resource(TrainerService, :id, :trainer) }, only: [:show, :update, :destroy]
+  before_action :set_trainer, only: [:show, :update, :destroy]
 
   def index
-    trainers = TrainerService.get_all_trainers
+    trainers = Trainer.all
     render json: Serializer::TrainerSerializer.new(trainers).serializable_hash
   end
 
@@ -11,30 +11,34 @@ class TrainersController < ApplicationController
   end
 
   def create
-    result = TrainerService.create_trainer(trainer_params)
-    if result.is_a?(Trainer)
-      render json: Serializer::TrainerSerializer.new(result).serializable_hash, status: :created
+    trainer = Trainer.new(trainer_params)
+
+    if trainer.save
+      render json: Serializer::TrainerSerializer.new(trainer).serializable_hash, status: :created
     else
-      render json: { error: result }, status: :unprocessable_entity
+      render json: { error: trainer.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
   def update
-    result = TrainerService.update_trainer(@trainer, trainer_params)
-    
-    if result.is_a?(Trainer)
-      render json: Serializer::TrainerSerializer.new(result).serializable_hash, status: :ok
+    if @trainer.update(trainer_params)
+      render json: Serializer::TrainerSerializer.new(@trainer).serializable_hash, status: :ok
     else
-      render json: { error: result }, status: :unprocessable_entity
+      render json: { error: @trainer.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
   def destroy
-    result = TrainerService.delete_trainer(@trainer)
-    render json: { message: result }
+    @trainer.destroy
+    render json: { success: "Trainer deleted" }
   end
 
   private
+
+  def set_trainer
+    @trainer = Trainer.find_by(id: params[:id])
+    render json: { error: "Trainer not found" }, status: :not_found unless @trainer
+  end
 
   def trainer_params
     params.require(:trainer).permit(
