@@ -1,0 +1,13 @@
+{
+    "editor.formatOnSave": true,
+    "ruby.format": true,
+    "ruby.lint": true,
+    "ruby.intellisense": true,
+    "[ruby]": {
+        "editor.defaultFormatter": "Shopify.ruby-lsp",
+        "editor.tabSize": 2,
+        "editor.insertSpaces": true
+    },
+    "ruby-lsp.formatter": "rubocop",
+    "ruby-lsp.rubyLsp": "bundler"
+}
